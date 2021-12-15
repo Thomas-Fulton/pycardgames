@@ -1,9 +1,10 @@
 from ..components import game, deck
 
 
-class snap_game(game) :
-    def __init__(self, nplayers):
-        print("Welcome to Snap! You are playing with {} players.\n Let's deal!".format(nplayers))
-        cards = deck
+class SnapGame(game.Game()):
+    def __init__(self, loadout, players, instructions):
+        nplayers = len(players)
+        print("Let's play Snap! You are playing with {} players: {} \n Let's deal!".format(nplayers, players[1:]))
+        cards = deck.Deck()
         cards.shuffle()
-        cards.deal(nplayers, "all")
+        cards.deal(players, "all")
