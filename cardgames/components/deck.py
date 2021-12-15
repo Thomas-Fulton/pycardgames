@@ -1,5 +1,5 @@
 
-def deck() :
+def Deck() :
     def __init__(self) :
         self.cards = list()  # store cards, which ones, how many, what order
     def shuffle(self) :
