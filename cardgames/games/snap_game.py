@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from components import game, deck
+from components import game, deck, player
 
 
 class SnapGame(game.Game):
@@ -8,8 +8,13 @@ class SnapGame(game.Game):
         self.loadout = loadout
         self.players = players
         self.instructions = instructions
-        nplayers = len(players)
-        print("Let's play Snap! You are playing with {} players: {}".format(nplayers, players[1:]))
+        if instructions is True:
+            print("Instructions would now be printed")
+        else:
+            assert(self.players is not None), "At least one player is required to play. You can add a new player using --player"
+            print("Let's play Snap! You are playing with {} players: {}".format(nplayers, players[1:]))
+            self.setup_game(loadout, players, instructions)
+
 
     def setup_game(self, loadout, players, instructions):
         print("Starts the game. Let's deal!")
