@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 from components import game, deck, player
 
 
@@ -17,9 +16,9 @@ class SnapGame(game.Game):
 
 
     def setup_game(self, loadout, players, instructions):
-        print("Starts the game. Let's deal!")
         # for player in players:
         #    player=deck.player
         # cards = deck.Deck()
         # cards.shuffle()
         # cards.deal(self.players, "all")
+        print("Starts the game. Let's deal!")
