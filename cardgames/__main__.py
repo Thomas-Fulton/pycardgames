@@ -1,12 +1,12 @@
 #!/usr/bin/env python
-
+from games import poker_game
 from games import snap_game
 import argparse
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--game', '-g', type=str, choices=['snap', 'speed'])
+    parser.add_argument('--game', '-g', type=str, choices=['snap', 'poker'])
     parser.add_argument('--loadout', '-l', type=str, default='new game')
     parser.add_argument("--player", '-p', type=str, dest='players', action='append', help='Player name.')  # append each occurence of player to list of players
     parser.add_argument('--instructions', '-i', action='store_true', help='Displays instructions for a specified game')
@@ -27,14 +27,27 @@ def main():
         raise
 
     try:
-        print("launching {}".format(args.game))
         if args.game == "snap":
+            print("launching {}".format(args.game))
             try:
-                game=snap_game.SnapGame(args.loadout, args.players, args.instructions)
+                game = snap_game.SnapGame(args.loadout, args.players, args.instructions)
             except Exception as e:
                 print("Game {} failed: {}".format(args.game, e))
     except Exception as e:
         print(e)
+        raise
+
+    try:
+        if args.game == "poker":
+            print("launching {}".format(args.game))
+            try:
+                game = poker_game.PokerGame(args.loadout, args.players, args.instructions)
+            except Exception as e:
+                print("Game {} failed: {}".format(args.game, e))
+                raise
+    except Exception as e:
+        print(e)
+        raise
 
 #    def options(self) :
 #        print("Options... \n Use \`--help\` to display options")
