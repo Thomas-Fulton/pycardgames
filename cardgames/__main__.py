@@ -5,6 +5,11 @@ import argparse
 
 
 def parse_args():
+    """
+
+    @return:
+    @rtype:
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--game', '-g', type=str, choices=['snap', 'poker'])
     parser.add_argument('--loadout', '-l', type=str, default='new game')
@@ -20,17 +25,13 @@ def parse_args():
 
 
 def main():
-    try:
-        args = parse_args()
-    except Exception as e:
-        print("Arguments failed to parse: {}".format(e))
-        raise
+    args = parse_args()
 
     try:
         if args.game == "snap":
             print("launching {}".format(args.game))
             try:
-                game = snap_game.SnapGame(args.loadout, args.players, args.instructions)
+                this_game = snap_game.SnapGame(args.loadout, args.players, args.instructions)
             except Exception as e:
                 print("Game {} failed: {}".format(args.game, e))
     except Exception as e:
@@ -41,7 +42,7 @@ def main():
         if args.game == "poker":
             print("launching {}".format(args.game))
             try:
-                game = poker_game.PokerGame(args.loadout, args.players, args.instructions)
+                this_game = poker_game.PokerGame(args.loadout, args.players, args.instructions)
             except Exception as e:
                 print("Game {} failed: {}".format(args.game, e))
                 raise
