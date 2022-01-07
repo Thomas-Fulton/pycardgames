@@ -3,7 +3,11 @@ from components import game, deck, player
 
 
 class PokerGame(game.Game):
+    """
+    A class to simulate a game of poker.
+    """
     def __init__(self, loadout, players, instructions):
+        super().__init__()
         self.loadout = loadout
         self.player_names = players
         self.players = {}
@@ -122,9 +126,9 @@ class PokerGame(game.Game):
         attributes and the game's attributes accordingly.
 
         :param p: player
-        :type p: class(Player)
+        :type p: :py:class:`player.Player`
         :return: player
-        :rtype: class(Player)
+        :rtype: :py:class:`player.Player`
         """
         print("\n\n{}, here are your cards:".format(p.name))
         p.cards.upturn(2)

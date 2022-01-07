@@ -6,9 +6,9 @@ import argparse
 
 def parse_args():
     """
-
-    @return:
-    @rtype:
+    Parses command line arguments for :py:func:`main()`
+    :return: args
+    :rtype: :py:class:`argparse.Namespace`
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('--game', '-g', type=str, choices=['snap', 'poker'])
@@ -26,7 +26,7 @@ def parse_args():
 
 def main():
     """
-    Parses command line arguments to start a game
+    Launches game module using parsed command line arguments.
     """
     args = parse_args()
     try:
