@@ -18,7 +18,7 @@ class PokerGame(game.Game):
         print("Let's play Poker! You are playing with {} players: {}".format(self.nplayers, players))
 
         # Set attributes:
-        self.buy_in = self.check_value(message="How much is the buy-in?")
+        self.buy_in = self.check_value(message="How much is the buy-in?\nInput: ")
         for p in self.player_names:
             initiated_player = player.Player(p)
             initiated_player.money = self.buy_in
@@ -29,34 +29,43 @@ class PokerGame(game.Game):
         self.deck.shuffle()
         self.community_cards = deck.Deck()
         self.community_cards.empty()
-        self.pot = 0
-        self.pot_incl_raise = 0
+        self.pot_total = 0
+        self.pot_min_to_call = 0
         self.big_blind = self.check_value("Please enter the value of the \"big blind\".The \"small blind\" "
                                           "will be half the value of the big blind\nInput: ")
         self.small_blind = self.big_blind / 2
         self.turn_counter = 0
         self.blind_rotation = len(self.player_names)
+        self.cont = True
 
         # New round until someone wins or game is exited.
-        while True:
-            cont = input("\n\nPress any key to continue to the next game. (Input \"Q\" to quit.)\nInput: ").lower()
-            if cont != "q":
-                self.next_game()
-            else:
-                # Print final winnings
-                print("\n\nThank you for playing poker!")
-                break
+        while self.cont is True:
+            self.next_game()
+            while True:
+                cont = input("\n\nWould you like to continue to the next game (y)? (Input \"Q\" to quit.)\nInput: ").lower()
+                if cont == "y":
+                    break
+                elif cont == "q":
+                    self.cont = False
+                    # save game?
+                    # Print final winnings
+                    break
+                else:
+                    print("\nInvalid response, please try again:")
+                    continue
+
+        print("\n\nThank you for playing poker!")
+
 
     def next_game(self):
         """
-
+        Simulates one game of poker, consisting of five rounds (Preflop, Flop, Turn, River and Showdown).
         """
         self.turn_counter += 1
 
-        # Setup new game
-        print("New Game. \n Dealing player cards...\n\n")
+        # Setup new game: Deal player and community cards.
+        print("\nNew Game of five rounds. \n Dealing player cards...\n\n")
         player_cards = [self.players[p].cards.all_cards for p in self.players]
-        print("Player card locations:", player_cards)
         self.deck.deal(2, player_cards, "top")
         print("Dealing the first three community cards...")
         self.community_cards.deal(3, self.community_cards.all_cards, "top")
@@ -66,13 +75,23 @@ class PokerGame(game.Game):
         print("{} is the big blind, and {} is the small blind. Adding blinds to the pot".format(self.player_names[0],
                                                                                                 self.player_names[1]))
         self.players[self.player_names[0]].money -= self.big_blind
+        self.players[self.player_names[0]].player_pot += self.big_blind
         self.players[self.player_names[1]].money -= self.small_blind
+        self.players[self.player_names[1]].player_pot += self.small_blind
+        self.pot_min_to_call = self.big_blind
+        self.pot_total = self.small_blind + self.big_blind
 
         # First round of bets: Preflop
         print("First round: Preflop")
         for n in self.player_names:
-            print("\n\nNext player:", n)
+            print("\n\n\n\n\nNext player:", n)
             p = self.players[n]
+            if p.status == "folded":
+                print("\n\n {} has folded.\n")
+                continue
+            if p.status == "all in":
+                print("\n\n{} has gone all in.\n".format(n))
+                continue
             self.player_choice(p)
 
         # Second round of bets: Flop
@@ -81,13 +100,15 @@ class PokerGame(game.Game):
         for n in self.player_names:
             p = self.players[n]
             if p.status == "folded":
-                print("\n\n {} has folded.\n")
+                print("\n\n{} has folded.\n".format(n))
+                continue
+            if p.status == "all in":
+                print("\n\n{} has gone all in.\n".format(n))
                 continue
             print("\n\nNext player:", n)
             self.player_choice(p)
 
         # Third round of bets: Turn
-        
 
         # Fourth round of bets: River
 
@@ -166,3 +187,5 @@ class PokerGame(game.Game):
 
 if __name__ == '__main__':
     game = PokerGame(loadout="new_game", players=["Tom", "Bot"], instructions=None)
+
+# TODO bot automation
