@@ -118,45 +118,72 @@ class PokerGame(game.Game):
 
     def player_choice(self, p):
         """
-        Prints the player's options and takes an input to check, call, raise or fold, and adjusts player's money and
-        the pot.
-        :param p: player name
-        :type p: Player
-        :return:
-        :rtype: Player
+        Prints the player's options and asks each user for input to check, call, raise or fold. Adjusts the player's
+        attributes and the game's attributes accordingly.
+
+        :param p: player
+        :type p: class(Player)
+        :return: player
+        :rtype: class(Player)
         """
-        print("{}, here are your cards:".format(p.name))
+        print("\n\n{}, here are your cards:".format(p.name))
         p.cards.upturn(2)
+        print(p.cards.all_cards)
 
         while True:
-            choice = input("You have £{}. The pot is at {}. Would you like to check or call (c), raise (r), or "
-                           "fold (f)?\nInput: ".format(p.money, self.pot_incl_raise)).lower()
+            to_call = self.pot_min_to_call - p.player_pot
+            choice = input("\n\nYou have put £{} into the pot so far, and have £{} remaining. "
+                           "The amount needed in the pot from each player in order to match the bet is £{}; "
+                           "in order to check/call, you must bet £{}. There is a total of £{} in the pot."
+                           "\n\nWould you like to check/call (c), raise (r), or fold (f)?\n"
+                           "Input: ".format(p.player_pot, p.money, self.pot_min_to_call,
+                                            to_call, self.pot_total)).lower()
             if choice == "r":
-                if p.money == 0:
+                if p.money <= self.pot_min_to_call:
                     print("\nYou do not have enough money to raise; please fold (f) or check/call (c).\n")
                     continue
-                self.pot_incl_raise = self.check_value("How much would you like to raise the pot to?",
-                                                       val_min=self.pot_incl_raise, val_max=self.players[p].money)
-
+                raise_by = self.check_value("By how much would you like to raise from the minimum bet?",
+                                            val_min=self.pot_min_to_call, val_max=p.money)
+                p.money -= (raise_by + to_call)
+                p.player_pot += (raise_by + to_call)
+                self.pot_min_to_call += raise_by
+                self.pot_total += (raise_by + to_call)
                 p.status = "raised"
                 break
             elif choice == "c":
-
+                if p.money <= to_call:
+                    nchoice = input("You do not have enough remaining to match the call; do you want to go all in (a)"
+                                    ", or fold (f)? ").lower()
+                    if nchoice == "a":
+                        p.player_pot += p.money
+                        p.money = 0
+                        self.pot_total += p.money
+                        p.status = "all in"
+                        break
+                    elif nchoice == "f":
+                        pass
+                    else:
+                        print("Invalid selection, please try again.")
+                        continue
+                p.money -= to_call
+                p.player_pot += to_call
+                self.pot_total += to_call
                 p.status = "called"
                 break
             elif choice == "f":
                 p.status = "folded"
-                # self.raise_in_round = True (go round players again to call/fold.
+                # self.raise_in_round = True (go round players again to call/fold).
                 break
             else:
                 print("(Invalid selection, please try again.)")
+                continue
 
         return self
 
     def check_value(self, message, val_min=0, val_max=None):
         """
-        Prompts the user for an input value and checks that the value is within a requested range. Prompts again if
-        the user input is outside range of accepted values.
+        Prompts the user for input and checks that the input value is within a specified range. Prompts again if
+        the user input is outside the range of accepted values.
 
         :param message: Message which is printed to describe the requested value from the user.
         :type message: str
