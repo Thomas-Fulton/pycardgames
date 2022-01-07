@@ -115,6 +115,9 @@ conda_env/
 .spyderproject
 .spyproject
 
+# Pycharm
+.idea/
+
 # Rope project settings
 .ropeproject
 
