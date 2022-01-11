@@ -36,7 +36,7 @@ class Deck:
                     elif location == "bottom":
                         pile.append(self.all_cards.pop(0))
                 except Exception as e:
-                    print(e, pile)
+                    print(e)
                     pass
 
 
