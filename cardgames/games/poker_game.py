@@ -1,10 +1,9 @@
 #!/usr/bin/env python
-from cardgames.components import game, deck, player
+from components import game, deck, player
 
 
 class PokerGame(game.Game):
     """A class to simulate a game of poker.
-
     """
 
     def __init__(self, loadout, players, instructions):
@@ -19,7 +18,7 @@ class PokerGame(game.Game):
             # user playing game (not just reading instructions), so player is required
             assert (self.player_names is not None), "At least one player is required to play. You can add a new " \
                                                     "player using --player"
-        #TODO catch excetpion if no players added
+        # TODO catch excetpion if no players added
         self.nplayers = len(self.player_names)
         print("Let's play Poker! You are playing with {} players: {}".format(self.nplayers, players))
 
@@ -27,10 +26,10 @@ class PokerGame(game.Game):
         self.buy_in = self.check_value(message="How much is the buy-in?\nInput: ")
         for p in self.player_names:
             initiated_player = player.Player(p)
+            super(player.Player, initiated_player).__init__()
             initiated_player.money = self.buy_in
-            initiated_player.status = None
+            # initiated_player.status = None
             self.players[p] = initiated_player
-            print(p)
         self.deck = deck.Deck()
         self.deck.shuffle()
         self.community_cards = deck.Deck()
@@ -40,11 +39,12 @@ class PokerGame(game.Game):
         self.big_blind = self.check_value("Please enter the value of the \"big blind\".The \"small blind\" "
                                           "will be half the value of the big blind\nInput: ")
         self.small_blind = self.big_blind / 2
+        print("\nThe big blind is £{}, and the small blind is £{}.".format(self.big_blind, self.small_blind))
         self.turn_counter = 0
         self.blind_rotation = len(self.player_names)
         self.cont = True
 
-        # New round until someone wins or game is exited.
+        # New game until someone wins, or game is exited.
         while self.cont is True:
             self.next_game()
             while True:
