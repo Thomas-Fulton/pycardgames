@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from cardgames.components.deck import Deck
+from components.deck import Deck
 
 
 class Player:
@@ -7,5 +7,6 @@ class Player:
         self.name = name
         self.cards = Deck()
         self.cards.empty()
+        self.status = None
         self.money = 0
         self.player_pot = 0
