@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from components.deck import Deck
+from cardgames.components.deck import Deck
 
 
 class Player:

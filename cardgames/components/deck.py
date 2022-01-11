@@ -40,7 +40,6 @@ class Deck:
         :param ncards: The number of cards to turn over.
         :type ncards: int
         """
-        ncards -= 1
         print(self.all_cards[0:ncards])
 
     def empty(self):

@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-from components import game, deck, player
+from cardgames.components import game, deck, player
 
 
 class PokerGame(game.Game):
+    """A class to simulate a game of poker.
+
     """
-    A class to simulate a game of poker.
-    """
+
     def __init__(self, loadout, players, instructions):
         super().__init__()
         self.loadout = loadout
@@ -18,6 +19,7 @@ class PokerGame(game.Game):
             # user playing game (not just reading instructions), so player is required
             assert (self.player_names is not None), "At least one player is required to play. You can add a new " \
                                                     "player using --player"
+        #TODO catch excetpion if no players added
         self.nplayers = len(self.player_names)
         print("Let's play Poker! You are playing with {} players: {}".format(self.nplayers, players))
 
