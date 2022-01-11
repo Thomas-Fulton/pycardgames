@@ -62,24 +62,22 @@ class PokerGame(game.Game):
 
         print("\n\nThank you for playing poker!")
 
-
     def next_game(self):
-        """
-        Simulates one game of poker, consisting of five rounds (Preflop, Flop, Turn, River and Showdown).
+        """Simulates one game of poker, consisting of five rounds (Preflop, Flop, Turn, River and Showdown).
         """
         self.turn_counter += 1
 
         # Setup new game: Deal player and community cards.
-        print("\nNew Game of five rounds. \n Dealing player cards...\n\n")
+        self.deck.shuffle()
+        print("\nNew Game of five rounds. \nDealing player cards...")
         player_cards = [self.players[p].cards.all_cards for p in self.players]
         self.deck.deal(2, player_cards, "top")
-        print("Dealing the first three community cards...")
-        self.community_cards.deal(3, self.community_cards.all_cards, "top")
+        print("\nDealing the first three community cards...")
 
-        # rotate player order and blind
+        # rotate player order and blinds.
         self.player_names.insert(0, self.player_names.pop(self.nplayers - 1))
-        print("{} is the big blind, and {} is the small blind. Adding blinds to the pot".format(self.player_names[0],
-                                                                                                self.player_names[1]))
+        print("\n{} is the big blind (£{}) for this round, and {} is the small blind (£{}). Adding blinds to the pot"
+              "...".format(self.player_names[0], self.big_blind, self.player_names[1], self.small_blind))
         self.players[self.player_names[0]].money -= self.big_blind
         self.players[self.player_names[0]].player_pot += self.big_blind
         self.players[self.player_names[1]].money -= self.small_blind
@@ -88,59 +86,85 @@ class PokerGame(game.Game):
         self.pot_total = self.small_blind + self.big_blind
 
         # First round of bets: Preflop
-        print("First round: Preflop")
+        print("\nFirst round: Preflop")
         for n in self.player_names:
-            print("\n\n\n\n\nNext player:", n)
-            p = self.players[n]
-            if p.status == "folded":
-                print("\n\n {} has folded.\n")
-                continue
-            if p.status == "all in":
-                print("\n\n{} has gone all in.\n".format(n))
-                continue
-            self.player_choice(p)
-
-        # Second round of bets: Flop
-        print("\n\nNext round: Flop\nHere are the first three community cards:\n\n")
-        self.community_cards.upturn(3)
-        for n in self.player_names:
-            p = self.players[n]
+            p: player.Player = self.players[n]
             if p.status == "folded":
                 print("\n\n{} has folded.\n".format(n))
                 continue
             if p.status == "all in":
                 print("\n\n{} has gone all in.\n".format(n))
                 continue
-            print("\n\nNext player:", n)
+            print("\n\n\n\nNext player:", n)
             self.player_choice(p)
 
+        # Second round of bets: Flop
+        print("\n\nNext round: Flop\nDealing the first three community cards:\n")
+        self.deck.deal(3, [self.community_cards.all_cards], "top")
+        self.community_cards.upturn(3)
+        self.player_turns()
+
         # Third round of bets: Turn
+        print("\n\nNext round: Turn\nDealing the fourth community card:\n")
+        self.deck.deal(1, [self.community_cards.all_cards], "top")
+        self.community_cards.upturn(1)
+
 
         # Fourth round of bets: River
 
         # Fifth round of bets: Showdown
 
-        # Deal back player and community cards to deck
+
+        # winner =
+        # self.players[winner].money += self.pot_total
+        self.pot_total = 0
+
+        # Reset: Deal back player and community cards to deck
+        self.pot_min_to_call = 0
+        for n in self.player_names:
+            p = self.players[n]
+            p.player_pot = 0
+            p.status = None
+            p.cards.deal(2, [self.deck.all_cards], "bottom")
+        self.community_cards.deal(5, [self.deck.all_cards], "bottom")
+        self.deck.shuffle()
+
+    def player_turns(self):
+        """Iterates through list of player names, and checks each player's status to see if player has previously
+        folded or gone all in before presenting the player with a choice of actions.
+        """
+        for n in self.player_names:
+            p: player.Player = self.players[n]
+            if p.status == "folded":
+                print("\n\n{} has folded.\n".format(n))
+                continue
+            if p.status == "all in":
+                print("\n\n{} has gone all in.\n".format(n))
+                continue
+            print("\n\n\n\nNext player:", n)
+            self.player_choice(p)
+        return self
 
     def player_choice(self, p):
-        """
-        Prints the player's options and asks each user for input to check, call, raise or fold. Adjusts the player's
-        attributes and the game's attributes accordingly.
+        """Prints the player's options and asks each user for input to either: check, call, raise or fold. Adjusts the
+        player's attributes and the game's attributes accordingly.
 
         :param p: player
         :type p: :py:class:`player.Player`
         :return: player
         :rtype: :py:class:`player.Player`
         """
-        print("\n\n{}, here are your cards:".format(p.name))
+        print("\nHere are the community cards so far:")
+        self.community_cards.upturn(len(self.community_cards.all_cards))
+        print("\n{}, here are your cards:".format(p.name))
         p.cards.upturn(2)
-        print(p.cards.all_cards)
 
+        # loop to make sure user input is valid, and that the player has enough money for the choice:
         while True:
             to_call = self.pot_min_to_call - p.player_pot
-            choice = input("\n\nYou have put £{} into the pot so far, and have £{} remaining. "
-                           "The amount needed in the pot from each player in order to match the bet is £{}; "
-                           "in order to check/call, you must bet £{}. There is a total of £{} in the pot."
+            choice = input("\n\nYou have put £{} into the pot so far, and have £{} remaining.\n"
+                           "The amount needed in the pot from each player in order to call the minimum bet is £{}; "
+                           "£{} is needed from you to check/call. \nThere is a total of £{} in the pot."
                            "\n\nWould you like to check/call (c), raise (r), or fold (f)?\n"
                            "Input: ".format(p.player_pot, p.money, self.pot_min_to_call,
                                             to_call, self.pot_total)).lower()
@@ -148,8 +172,9 @@ class PokerGame(game.Game):
                 if p.money <= self.pot_min_to_call:
                     print("\nYou do not have enough money to raise; please fold (f) or check/call (c).\n")
                     continue
-                raise_by = self.check_value("By how much would you like to raise from the minimum bet?",
-                                            val_min=self.pot_min_to_call, val_max=p.money)
+                print("Minimum bet (to call): {}".format(self.pot_min_to_call))
+                raise_by = self.check_value("By how much would you like to raise beyond the minimum bet?\nInput: ",
+                                            val_min=0, val_max=(p.money - to_call))
                 p.money -= (raise_by + to_call)
                 p.player_pot += (raise_by + to_call)
                 self.pot_min_to_call += raise_by
