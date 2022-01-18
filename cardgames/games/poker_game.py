@@ -33,7 +33,7 @@ class PokerGame(game.Game):
             initiated_player.money = self.buy_in
             self.players[p] = initiated_player
         self.deck = deck.Deck()
-        self.deck.shuffle()
+        #self.deck.shuffle()
         self.community_cards = deck.Deck()
         self.community_cards.empty()
         self.pot_total = 0
@@ -72,7 +72,8 @@ class PokerGame(game.Game):
         self.turn_counter += 1
 
         # Setup new game: Deal player and community cards.
-        self.deck.shuffle()
+        #self.deck.shuffle()
+        self.deck.order()
         print("\nNew Game of five rounds. \nDealing player cards...")
         player_cards = [self.players[p].cards.all_cards for p in self.players]
         self.deck.deal(2, player_cards, "top")
@@ -128,7 +129,7 @@ class PokerGame(game.Game):
             p.cards.deal(2, [self.deck.all_cards], "bottom")
         self.community_cards.deal(5, [self.deck.all_cards], "bottom")
         self.best_cards = None
-        self.deck.shuffle()
+        #self.deck.shuffle()
 
     def player_turns(self):
         """Iterates through list of player names, and checks each player's status to see if player has previously
@@ -286,40 +287,29 @@ class PokerGame(game.Game):
             best_hand_status = "high card"
             p.best_cards = [best_hand_status, community_and_player_cards]
 
-        # If hand is a single pair, look for highest triple by removing one paired card, and looking for pairs
-        # among the remaining community_and_player_cards
         if best_hand_status == "pair" or best_hand_status == "two pair":
-            for i in sorted_pairs:
-                print("I is: ", i)
-                reduced_comm_and_player_cards = community_and_player_cards
-                reduced_comm_and_player_cards.remove(i[0])
-                print("reduced_comm...", reduced_comm_and_player_cards)
-                all_triples_from_pairs_combinations = list(itertools.combinations(reduced_comm_and_player_cards, r=2))
-                triples_from_pairs = [(card1, card2) for card1, card2 in all_triples_from_pairs_combinations if
-                                      card1[0] == card2[0]]
-                sorted_triples_from_pairs = sorted(triples_from_pairs, key=lambda tup: tup[0], reverse=True)
-                print("triples from pairs... ", sorted_triples_from_pairs)
-                if sorted_triples_from_pairs:
-                    best_hand_status = "triple"
-                    triple = [sorted_triples_from_pairs[0][0], sorted_triples_from_pairs[0][1], i[0]]
-                    p.best_cards = [best_hand_status, triple]
-                    print(p.best_cards)
-                    break
-                else:
-                    continue
+            all_triples_from_pairs_combinations = list(itertools.combinations(community_and_player_cards, r=3))
+            triples_from_pairs = [(card1, card2, card3) for card1, card2, card3 in
+                                      all_triples_from_pairs_combinations if card1[0] == card2[0] and
+                                      card2[0] == card3[0]]
+            sorted_triples_from_pairs = sorted(triples_from_pairs, key=lambda tup: tup[0], reverse=True)
+            print("triples from pairs... ", sorted_triples_from_pairs)
+        if sorted_triples_from_pairs:
+            best_hand_status = "triple"
+            triple = [sorted_triples_from_pairs[0]]
+            p.best_cards = [best_hand_status, triple]
+            print(p.best_cards)
+
         if best_hand_status == "triple":
-            for i in sorted_triples_from_pairs:
-                reduced_comm_and_player_cards = community_and_player_cards
-                reduced_comm_and_player_cards.remove(i[0])
-                reduced_comm_and_player_cards.remove(i[1])
-                all_quads_from_pairs_combinations = list(itertools.combinations(reduced_comm_and_player_cards, r=2))
-                quads_from_pairs = [(card1, card2) for card1, card2 in all_quads_from_pairs_combinations if
-                               card1[0] == card2[0]]
-                sorted_quads_from_pairs = sorted(quads_from_pairs, key=lambda tup: tup[0], reverse=True)
-            if quads_from_pairs:
-                best_hand_status = "four-of-a-kind"
-                quads = [sorted_quads_from_pairs[0][0], sorted_quads_from_pairs[0][1], i[0], i[1]]
-                p.best_cards = [best_hand_status, quads]
+            all_quads_from_pairs_combinations = list(itertools.combinations(community_and_player_cards, r=4))
+            quads_from_pairs = [(card1, card2, card3, card4) for card1, card2, card3, card4 in
+                                all_quads_from_pairs_combinations if card1[0] == card2[0] and card2[0] == card3[0]
+                                and card3[0] == card4[0]]
+            sorted_quads_from_pairs = sorted(quads_from_pairs, key=lambda tup: tup[0], reverse=True)
+        if sorted_quads_from_pairs:
+            best_hand_status = "four-of-a-kind"
+            quads = [sorted_quads_from_pairs[0]]
+            p.best_cards = [best_hand_status, quads]
 
         # Find straights: each card value (eg. Ace, 2, 3 etc.) is designated a numerical value, so that the sum of
         # any combination of card values is unique. All possible five card straights combinations can be identified
@@ -330,7 +320,7 @@ class PokerGame(game.Game):
 
         # straight values
         for n in range(2, 10):
-            straight_values = [unique_total_dict[i+n] for i in range(0, 6)]
+            straight_values = [unique_total_dict[i+n] for i in range(0, 5)]
             straight_totals.append(sum(straight_values))
         print(straight_totals)
         unique_player_comm_values = [unique_total_dict[i[0]] for i in community_and_player_cards]
@@ -340,7 +330,7 @@ class PokerGame(game.Game):
         #straight_cards = [k for k, v in unique_total_dict if v in unique_player_comm_values]
         #print(straight_cards)
         if totals:
-            p.best_cards = ["straight", ]
+            p.best_cards = ["straight", totals, sum(totals)]
 
         print(p.best_cards)
 
