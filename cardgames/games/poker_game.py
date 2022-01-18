@@ -257,23 +257,92 @@ class PokerGame(game.Game):
             print("\n\n\n\nNext player:", n)
             p.cards.upturn(2)
             self.assess(p)
-            if self.best_cards is None:
-                self.best_cards = p.best_cards
 
     def assess(self, p: player.Player):
-        """
+        """Lists all pairwise combinations of the 5 community and 2 player cards, and uses the combinations to find
+        all pairs, triples, and four-of-a-kinds, and sets the players best_cards attribute to the best hand the
+        player has. TODO (Straights, flushes and full houses not calculated yet.)
 
         :param p: player
         :type p: player.Player
         """
+        best_hand_status = None
+        straight_totals = list()
+
         community_and_player_cards = p.cards.all_cards + self.community_cards.all_cards
 
         all_paired_combinations = list(itertools.combinations(community_and_player_cards, r=2))
-        print(type(all_paired_combinations))
-        print(all_paired_combinations)
         pairs = [(card1, card2) for card1, card2 in all_paired_combinations if card1[0] == card2[0]]
-        print(type(pairs))
-        print(pairs)
+        sorted_pairs = sorted(pairs, key=lambda tup: tup[0], reverse=True)
+        print(sorted_pairs)
+        if len(sorted_pairs) == 1:
+            best_pair = sorted_pairs[0]
+            best_hand_status = "pair"
+            p.best_cards = [best_hand_status, best_pair]
+        elif len(sorted_pairs) >= 2:
+            best_hand_status = "two pair"
+            p.best_cards = [best_hand_status, sorted_pairs]
+        elif len(sorted_pairs) == 0:
+            best_hand_status = "high card"
+            p.best_cards = [best_hand_status, community_and_player_cards]
+
+        # If hand is a single pair, look for highest triple by removing one paired card, and looking for pairs
+        # among the remaining community_and_player_cards
+        if best_hand_status == "pair" or best_hand_status == "two pair":
+            for i in sorted_pairs:
+                print("I is: ", i)
+                reduced_comm_and_player_cards = community_and_player_cards
+                reduced_comm_and_player_cards.remove(i[0])
+                print("reduced_comm...", reduced_comm_and_player_cards)
+                all_triples_from_pairs_combinations = list(itertools.combinations(reduced_comm_and_player_cards, r=2))
+                triples_from_pairs = [(card1, card2) for card1, card2 in all_triples_from_pairs_combinations if
+                                      card1[0] == card2[0]]
+                sorted_triples_from_pairs = sorted(triples_from_pairs, key=lambda tup: tup[0], reverse=True)
+                print("triples from pairs... ", sorted_triples_from_pairs)
+                if sorted_triples_from_pairs:
+                    best_hand_status = "triple"
+                    triple = [sorted_triples_from_pairs[0][0], sorted_triples_from_pairs[0][1], i[0]]
+                    p.best_cards = [best_hand_status, triple]
+                    print(p.best_cards)
+                    break
+                else:
+                    continue
+        if best_hand_status == "triple":
+            for i in sorted_triples_from_pairs:
+                reduced_comm_and_player_cards = community_and_player_cards
+                reduced_comm_and_player_cards.remove(i[0])
+                reduced_comm_and_player_cards.remove(i[1])
+                all_quads_from_pairs_combinations = list(itertools.combinations(reduced_comm_and_player_cards, r=2))
+                quads_from_pairs = [(card1, card2) for card1, card2 in all_quads_from_pairs_combinations if
+                               card1[0] == card2[0]]
+                sorted_quads_from_pairs = sorted(quads_from_pairs, key=lambda tup: tup[0], reverse=True)
+            if quads_from_pairs:
+                best_hand_status = "four-of-a-kind"
+                quads = [sorted_quads_from_pairs[0][0], sorted_quads_from_pairs[0][1], i[0], i[1]]
+                p.best_cards = [best_hand_status, quads]
+
+        # Find straights: each card value (eg. Ace, 2, 3 etc.) is designated a numerical value, so that the sum of
+        # any combination of card values is unique. All possible five card straights combinations can be identified
+        # from the unique totals of any combination.
+        unique_sum_values = [2 ** i for i in range(2, 15)]
+        unique_total_dict = dict(zip(p.cards.card_values, unique_sum_values))
+        print(unique_total_dict)
+
+        # straight values
+        for n in range(2, 10):
+            straight_values = [unique_total_dict[i+n] for i in range(0, 6)]
+            straight_totals.append(sum(straight_values))
+        print(straight_totals)
+        unique_player_comm_values = [unique_total_dict[i[0]] for i in community_and_player_cards]
+        print(unique_player_comm_values)
+        totals = [i for i in list(itertools.combinations(unique_player_comm_values, 5)) if sum(i) in straight_totals]
+        print(totals)
+        #straight_cards = [k for k, v in unique_total_dict if v in unique_player_comm_values]
+        #print(straight_cards)
+        if totals:
+            p.best_cards = ["straight", ]
+
+        print(p.best_cards)
 
 
 if __name__ == '__main__':
