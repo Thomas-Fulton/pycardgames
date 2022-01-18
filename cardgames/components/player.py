@@ -10,3 +10,4 @@ class Player:
         self.status = None
         self.money = 0
         self.player_pot = 0
+        self.best_cards = None
