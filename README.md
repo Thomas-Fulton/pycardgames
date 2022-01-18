@@ -1,9 +1,9 @@
 # python-card-games
 Fun project to practice programming in python. Specifically:
 
-- python package structure
+- learn and implement python package structure
 - refresh Python basics
-- argparse and command line functionality
+- implement argparse and command line functionality
 - automated in-code documentation in PyCharm, and automated package documentation with sphinx
 
 Poker
