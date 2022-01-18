@@ -1,12 +1,12 @@
 # python-card-games
-Fun project to practice python programming. Specifically:
+Fun project to practice programming in python. Specifically:
 
-- package structure
+- python package structure
 - refresh Python basics
 - argparse and command line functionality
-- automated documentation with Sphinx and PyCharm
+- automated in-code documentation in PyCharm, and automated package documentation with sphinx
 
 Poker
 =====
-Disclaimer: Proper poker rules are not implemented, as I do not know them! The (probably incorrect) rules that I use 
-with mates however will be fully implemented. (eg. no minimum raise.)
+Disclaimer: Offical poker rules are not implemented, as I don't know how to play properly! The (probably incorrect) rules that I use 
+with mates will be fully implemented however. (eg. no minimum raise.)
