@@ -7,7 +7,7 @@ class Deck:
     Simulates a deck of cards using lists.
     """
     def __init__(self):
-        self.card_values = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"]
+        self.card_values = range(2, 15)  # ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"]
         self.card_suits = ["Diamonds", "Hearts", "Clubs", "Spades"]
         self.all_cards = [(value, suit) for value in self.card_values for suit in self.card_suits]
 
@@ -47,10 +47,22 @@ class Deck:
         :type ncards: int
         """
         for k in range(ncards):
-            print("{} of {}".format(self.all_cards[k][0], self.all_cards[k][1]))
+            if self.all_cards[k][0] in range(2, 11):
+                card_value_name = self.all_cards[k][0]
+            elif self.all_cards[k][0] == 11:
+                card_value_name = "Jack"
+            elif self.all_cards[k][0] == 12:
+                card_value_name = "Queen"
+            elif self.all_cards[k][0] == 13:
+                card_value_name = "King"
+            elif self.all_cards[k][0] == 14:
+                card_value_name = "Ace"
+            print("    {} of {}".format(card_value_name, self.all_cards[k][1]))
 
     def empty(self):
         """
         Clears all cards from :py:attr:`deck.all_cards` to create an empty deck.
         """
         self.all_cards.clear()
+
+
