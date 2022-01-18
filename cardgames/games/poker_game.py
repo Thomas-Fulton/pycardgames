@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import itertools
 from components import game, deck, player
 
 
@@ -18,7 +19,7 @@ class PokerGame(game.Game):
             # user playing game (not just reading instructions), so player is required
             assert (self.player_names is not None), "At least one player is required to play. You can add a new " \
                                                     "player using --player"
-        # TODO catch excetpion if no players added
+        # TODO catch exception if no players added
         self.nplayers = len(self.player_names)
         print("Let's play Poker! You are playing with {} players: {}".format(self.nplayers, players))
 
@@ -28,7 +29,6 @@ class PokerGame(game.Game):
             initiated_player = player.Player(p)
             super(player.Player, initiated_player).__init__()
             initiated_player.money = self.buy_in
-            # initiated_player.status = None
             self.players[p] = initiated_player
         self.deck = deck.Deck()
         self.deck.shuffle()
@@ -38,11 +38,12 @@ class PokerGame(game.Game):
         self.pot_min_to_call = 0
         self.big_blind = self.check_value("Please enter the value of the \"big blind\".The \"small blind\" "
                                           "will be half the value of the big blind\nInput: ")
-        self.small_blind = self.big_blind / 2
+        self.small_blind = int(self.big_blind / 2)
         print("\nThe big blind is £{}, and the small blind is £{}.".format(self.big_blind, self.small_blind))
         self.turn_counter = 0
         self.blind_rotation = len(self.player_names)
         self.cont = True
+        self.best_cards = None
 
         # New game until someone wins, or game is exited.
         while self.cont is True:
@@ -86,34 +87,30 @@ class PokerGame(game.Game):
         self.pot_total = self.small_blind + self.big_blind
 
         # First round of bets: Preflop
-        print("\nFirst round: Preflop")
-        for n in self.player_names:
-            p: player.Player = self.players[n]
-            if p.status == "folded":
-                print("\n\n{} has folded.\n".format(n))
-                continue
-            if p.status == "all in":
-                print("\n\n{} has gone all in.\n".format(n))
-                continue
-            print("\n\n\n\nNext player:", n)
-            self.player_choice(p)
+        print("\nFirst round: PREFLOP")
+        self.player_turns()
 
         # Second round of bets: Flop
-        print("\n\nNext round: Flop\nDealing the first three community cards:\n")
+        print("\n\nNext round: FLOP\nDealing the first three community cards:\n")
         self.deck.deal(3, [self.community_cards.all_cards], "top")
         self.community_cards.upturn(3)
         self.player_turns()
 
         # Third round of bets: Turn
-        print("\n\nNext round: Turn\nDealing the fourth community card:\n")
+        print("\n\nNext round: TURN\nDealing the fourth community card:\n")
         self.deck.deal(1, [self.community_cards.all_cards], "top")
         self.community_cards.upturn(1)
-
+        self.player_turns()
 
         # Fourth round of bets: River
+        print("\n\nNext round: RIVER\nDealing the final community card:\n")
+        self.deck.deal(1, [self.community_cards.all_cards], "top")
+        self.community_cards.upturn(1)
+        self.player_turns()
 
         # Fifth round of bets: Showdown
-
+        print("\n\nNext round: SHOWDOWN\nPlease reveal your cards.")
+        self.reveal()
 
         # winner =
         # self.players[winner].money += self.pot_total
@@ -127,6 +124,7 @@ class PokerGame(game.Game):
             p.status = None
             p.cards.deal(2, [self.deck.all_cards], "bottom")
         self.community_cards.deal(5, [self.deck.all_cards], "bottom")
+        self.best_cards = None
         self.deck.shuffle()
 
     def player_turns(self):
@@ -213,8 +211,7 @@ class PokerGame(game.Game):
 
     def check_value(self, message, val_min=0, val_max=None):
         """
-        Prompts the user for input and checks that the input value is within a specified range. Prompts again if
-        the user input is outside the range of accepted values.
+        Prompts the user for input until the input value is within a specified range.
 
         :param message: Message which is printed to describe the requested value from the user.
         :type message: str
@@ -241,6 +238,39 @@ class PokerGame(game.Game):
             else:
                 break
         return value
+
+    def reveal(self):
+        """
+
+        """
+        for n in self.player_names:
+            p: player.Player = self.players[n]
+            if p.status == "folded":
+                print("\n\n{} has folded.\n".format(n))
+                continue
+            if p.status == "all in":
+                print("\n\n{} has gone all in.\n".format(n))
+                continue
+            print("\n\n\n\nNext player:", n)
+            p.cards.upturn(2)
+            self.assess(p)
+            if self.best_cards is None:
+                self.best_cards = p.best_cards
+
+    def assess(self, p: player.Player):
+        """
+
+        :param p: player
+        :type p: player.Player
+        """
+        community_and_player_cards = p.cards.all_cards + self.community_cards.all_cards
+
+        all_paired_combinations = list(itertools.combinations(community_and_player_cards, r=2))
+        print(type(all_paired_combinations))
+        print(all_paired_combinations)
+        pairs = [(card1, card2) for card1, card2 in all_paired_combinations if card1[0] == card2[0]]
+        print(type(pairs))
+        print(pairs)
 
 
 if __name__ == '__main__':
