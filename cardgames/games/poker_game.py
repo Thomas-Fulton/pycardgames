@@ -15,12 +15,14 @@ class PokerGame(game.Game):
         self.instructions = instructions
         if instructions is True:
             print("(Instructions would now be printed)")
-        else:
-            # user playing game (not just reading instructions), so player is required
-            assert (self.player_names is not None), "At least one player is required to play. You can add a new " \
-                                                    "player using --player"
-        # TODO catch exception if no players added
+        # user playing game (not just reading instructions), so player is required
+        assert (self.player_names is not None), "\n\nNo players have been specified: at least two players are required " \
+                                                "to play. You can add a new player " \
+                                                "using --player or -p flag.\n\n "
         self.nplayers = len(self.player_names)
+        assert (self.nplayers > 1), "\n\nOnly one player has been specified: at least two players are required " \
+                                    "to play. You can add a new player " \
+                                    "using --player or -p flag.\n\n "
         print("Let's play Poker! You are playing with {} players: {}".format(self.nplayers, players))
 
         # Set attributes:
@@ -49,7 +51,8 @@ class PokerGame(game.Game):
         while self.cont is True:
             self.next_game()
             while True:
-                cont = input("\n\nWould you like to continue to the next game (y)? (Input \"Q\" to quit.)\nInput: ").lower()
+                cont = input("\n\nWould you like to continue to the next game (y)? (Input \"Q\" to quit.)\nInput: "
+                             "").lower()
                 if cont == "y":
                     break
                 elif cont == "q":
@@ -246,7 +249,7 @@ class PokerGame(game.Game):
         for n in self.player_names:
             p: player.Player = self.players[n]
             if p.status == "folded":
-                print("\n\n{} has folded.\n".format(n))
+                print("\n\n{} folded.\n".format(n))
                 continue
             if p.status == "all in":
                 print("\n\n{} has gone all in.\n".format(n))
