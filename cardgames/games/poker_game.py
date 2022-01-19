@@ -70,7 +70,7 @@ class PokerGame(game.Game):
         self.pot_total = 0
         self.pot_min_to_call = 0
         self.big_blind = check_value("Please enter the value of the \"big blind\".The \"small blind\" "
-                                          "will be half the value of the big blind\nInput: ")
+                                     "will be half the value of the big blind\nInput: ")
         self.small_blind = int(self.big_blind / 2)
         print("\nThe big blind is £{}, and the small blind is £{}.".format(self.big_blind, self.small_blind))
         self.turn_counter = 0
@@ -212,7 +212,7 @@ class PokerGame(game.Game):
                     continue
                 print("Minimum bet (to call): {}".format(self.pot_min_to_call))
                 raise_by = check_value("By how much would you like to raise beyond the minimum bet?\nInput: ",
-                                            val_min=0, val_max=(p.money - to_call))
+                                       val_min=0, val_max=(p.money - to_call))
                 p.money -= (raise_by + to_call)
                 p.player_pot += (raise_by + to_call)
                 self.pot_min_to_call += raise_by
@@ -282,7 +282,8 @@ class PokerGame(game.Game):
                     self.best_cards = p.best_cards
                     self.split_with = None
                 else:
-                    # current round_winner and p essentially have same hand: compare to find who has the highest card
+                    # TODO (not working) current round_winner and p essentially have same hand: compare to find who
+                    #  has the highest card
                     p_highest_card = 0
                     w_highest_card = 0
                     for i in p.cards.all_cards:
@@ -302,7 +303,6 @@ class PokerGame(game.Game):
                     else:
                         self.split_with = n
             print("\n{} is currently winning the round with a {}".format(self.round_winner, self.best_cards[0]))
-
 
     def assess(self, p: player.Player):
         """Lists all pairwise combinations of the 5 community and 2 player cards, and uses the combinations to find
