@@ -45,7 +45,11 @@ class PokerGame(game.Game):
         self.turn_counter = 0
         self.blind_rotation = len(self.player_names)
         self.cont = True
-        self.best_cards = None
+        self.best_cards = ("High Card", (2, "Spades"))  # worst card so comparable
+        self.round_winner = None
+        self.hand_ranks = {"Royal Flush": 1, "Straight Flush": 2, "Four-of-a-kind": 3, "Full House": 4, "Flush": 5,
+                           "Straight": 6, "Triple": 7, "Two Pair": 8, "Pair": 9, "High Card": 10}
+        self.split_with = None
 
         # New game until someone wins, or game is exited.
         while self.cont is True:
@@ -115,7 +119,6 @@ class PokerGame(game.Game):
         print("\n\nNext round: SHOWDOWN\nPlease reveal your cards.")
         self.reveal()
 
-        # winner =
         # self.players[winner].money += self.pot_total
         self.pot_total = 0
 
@@ -258,6 +261,49 @@ class PokerGame(game.Game):
             p.cards.upturn(2)
             self.assess(p)
 
+            if self.round_winner is None:
+                self.round_winner = n
+            # if rank of player's hand is better (lower) than rank of the current winner's hand, replace
+            # self.round_winner and self.best_cards with player's name and best cards
+            if self.hand_ranks[p.best_cards[0]] < self.hand_ranks[self.best_cards[0]]:
+                self.round_winner = n
+                self.best_cards = p.best_cards
+                self.split_with = None
+            # if hand ranks are the same, compare best cards to find highest, and update current winner and best cards.
+            elif self.hand_ranks[p.best_cards[0]] == self.best_cards[0]:
+                if p.best_cards[1][0] > self.players[self.round_winner].best_cards[1][0]:
+                    self.round_winner = n
+                    self.best_cards = p.best_cards
+                    self.split_with = None
+                else:
+                    # current round_winner and p essentially have same hand: compare to find who has the highest card
+                    p_highest_card = 0
+                    w_highest_card = 0
+                    for i in p.cards.all_cards:
+                        if i[0] > p_highest_card:
+                            p_highest_card = i[0]
+                        else:
+                            continue
+                    for i in self.players[self.round_winner].cards.all_cards:
+                        if i[0] > w_highest_card:
+                            w_highest_card = i[0]
+                        else:
+                            continue
+                    if p_highest_card > w_highest_card:
+                        self.round_winner = n
+                        self.best_cards = p.best_cards
+                        self.split_with = None
+                    else :
+                        self.split_with = n
+
+
+
+
+
+
+
+
+
     def assess(self, p: player.Player):
         """Lists all pairwise combinations of the 5 community and 2 player cards, and uses the combinations to find
         all pairs, triples, and four-of-a-kinds, and sets the players best_cards attribute to the best hand the
@@ -274,16 +320,15 @@ class PokerGame(game.Game):
         all_paired_combinations = list(itertools.combinations(community_and_player_cards, r=2))
         pairs = [(card1, card2) for card1, card2 in all_paired_combinations if card1[0] == card2[0]]
         sorted_pairs = sorted(pairs, key=lambda tup: tup[0], reverse=True)
-        print(sorted_pairs)
         if len(sorted_pairs) == 1:
             best_pair = sorted_pairs[0]
-            best_hand_status = "pair"
+            best_hand_status = "Pair"
             p.best_cards = [best_hand_status, best_pair]
         elif len(sorted_pairs) >= 2:
-            best_hand_status = "two pair"
+            best_hand_status = "Two Pair"
             p.best_cards = [best_hand_status, sorted_pairs]
         elif len(sorted_pairs) == 0:
-            best_hand_status = "high card"
+            best_hand_status = "High Card"
             p.best_cards = [best_hand_status, community_and_player_cards]
 
         if best_hand_status == "pair" or best_hand_status == "two pair":
@@ -292,21 +337,19 @@ class PokerGame(game.Game):
                        all_triples_combinations if card1[0] == card2[0] and
                        card2[0] == card3[0]]
             sorted_triples = sorted(triples, key=lambda tup: tup[0], reverse=True)
-            print("triples from pairs:    ", sorted_triples)
             if sorted_triples:
-                best_hand_status = "triple"
+                best_hand_status = "Triple"
                 triple = [sorted_triples[0]]
                 p.best_cards = [best_hand_status, triple]
-                print(p.best_cards)
 
-        if best_hand_status == "triple":
+        if best_hand_status == "Triple":
             all_quads_combinations = list(itertools.combinations(community_and_player_cards, r=4))
             quads = [(card1, card2, card3, card4) for card1, card2, card3, card4 in
                      all_quads_combinations if card1[0] == card2[0] and card2[0] == card3[0]
                      and card3[0] == card4[0]]
             sorted_quads = sorted(quads, key=lambda tup: tup[0], reverse=True)
             if sorted_quads:
-                best_hand_status = "four-of-a-kind"
+                best_hand_status = "Four-of-a-kind"
                 quads = [sorted_quads[0]]
                 p.best_cards = [best_hand_status, quads]
 
@@ -315,23 +358,19 @@ class PokerGame(game.Game):
         # from the unique totals of any combination.
         unique_sum_values = [2 ** i for i in range(2, 15)]
         unique_total_dict = dict(zip(p.cards.card_values, unique_sum_values))  # Keys: range(2, 15), values: 2**keys
-        print(unique_total_dict)
 
         # straight values.
         # Use remainders from 0 to 15 / 13 to get values of straights which loop from J,Q,K back to A,2 for example
         for n in range(0, 13):
             straight_values = [unique_total_dict[((i+n) % 13) + 2] for i in range(0, 5)]
-            #print("n: straight vals::::", n , straight_values)
             straight_totals.append(sum(straight_values))
-        print("straight totals:     ", straight_totals)
         unique_player_comm_values = [unique_total_dict[i[0]] for i in community_and_player_cards]
-        print(sum(unique_player_comm_values))
         totals = [i for i in list(itertools.combinations(unique_player_comm_values, r=5)) if sum(i) in straight_totals]
         print(totals)
-        straight_cards = [k for k, v in unique_total_dict if v in totals]
-        print(straight_cards)
+        #straight_cards = [k for k, v in unique_total_dict if v in totals]
+        #print(straight_cards)
         if totals:
-            p.best_cards = ["straight", straight_cards, totals, sum(totals)]
+            p.best_cards = ["Straight", totals]
 
         #TODO full house
         #TODO flush
