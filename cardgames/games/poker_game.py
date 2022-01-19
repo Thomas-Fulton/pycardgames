@@ -293,11 +293,11 @@ class PokerGame(game.Game):
                        card2[0] == card3[0]]
             sorted_triples = sorted(triples, key=lambda tup: tup[0], reverse=True)
             print("triples from pairs:    ", sorted_triples)
-        if sorted_triples:
-            best_hand_status = "triple"
-            triple = [sorted_triples[0]]
-            p.best_cards = [best_hand_status, triple]
-            print(p.best_cards)
+            if sorted_triples:
+                best_hand_status = "triple"
+                triple = [sorted_triples[0]]
+                p.best_cards = [best_hand_status, triple]
+                print(p.best_cards)
 
         if best_hand_status == "triple":
             all_quads_combinations = list(itertools.combinations(community_and_player_cards, r=4))
@@ -305,10 +305,10 @@ class PokerGame(game.Game):
                      all_quads_combinations if card1[0] == card2[0] and card2[0] == card3[0]
                      and card3[0] == card4[0]]
             sorted_quads = sorted(quads, key=lambda tup: tup[0], reverse=True)
-        if sorted_quads:
-            best_hand_status = "four-of-a-kind"
-            quads = [sorted_quads[0]]
-            p.best_cards = [best_hand_status, quads]
+            if sorted_quads:
+                best_hand_status = "four-of-a-kind"
+                quads = [sorted_quads[0]]
+                p.best_cards = [best_hand_status, quads]
 
         # Find straights: each card value (eg. Ace, 2, 3 etc.) is designated a numerical value, so that the sum of
         # any combination of card values is unique. All possible five card straights combinations can be identified
