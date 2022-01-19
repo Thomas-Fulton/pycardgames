@@ -7,7 +7,7 @@ class Deck:
     Simulates a deck of cards using lists.
     """
     def __init__(self):
-        self.card_values = range(2, 15)  # ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"]
+        self.card_values = range(2, 15) # ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
         self.card_suits = ["Diamonds", "Hearts", "Clubs", "Spades"]
         self.all_cards = [(value, suit) for value in self.card_values for suit in self.card_suits]
 
@@ -64,5 +64,10 @@ class Deck:
         Clears all cards from :py:attr:`deck.all_cards` to create an empty deck.
         """
         self.all_cards.clear()
+
+    def order(self):
+        """Reorders the deck (ascending). Suit order is random.
+        """
+        self.all_cards.sort(key=lambda card_val: card_val[0])
 
 
