@@ -69,14 +69,14 @@ class PokerGame(game.Game):
         self.community_cards.empty()
         self.pot_total = 0
         self.pot_min_to_call = 0
-        self.big_blind = self.check_value("Please enter the value of the \"big blind\".The \"small blind\" "
+        self.big_blind = check_value("Please enter the value of the \"big blind\".The \"small blind\" "
                                           "will be half the value of the big blind\nInput: ")
         self.small_blind = int(self.big_blind / 2)
         print("\nThe big blind is £{}, and the small blind is £{}.".format(self.big_blind, self.small_blind))
         self.turn_counter = 0
         self.blind_rotation = len(self.player_names)
         self.cont = True
-        self.best_cards = ("High Card", (2, "Spades"))  # worst card so comparable
+        self.best_cards = ["High Card", [(2, "Spades")]]  # worst card so comparable
         self.round_winner = None
         self.hand_ranks = {"Royal Flush": 1, "Straight Flush": 2, "Four-of-a-kind": 3, "Full House": 4, "Flush": 5,
                            "Straight": 6, "Triple": 7, "Two Pair": 8, "Pair": 9, "High Card": 10}
@@ -149,8 +149,11 @@ class PokerGame(game.Game):
         # Fifth round of bets: Showdown
         print("\n\nNext round: SHOWDOWN\nPlease reveal your cards.")
         self.reveal()
+        print("\n\n{} won the round, and the pot (£{}) with a {}".format(self.round_winner, self.pot_total,
+                                                                         self.best_cards[0]))
+        # TODO check blind players have not lost all money/have enough to put in the blind for the next round.
 
-        # self.players[winner].money += self.pot_total
+        self.players[self.round_winner].money += self.pot_total
         self.pot_total = 0
 
         # Reset: Deal back player and community cards to deck
@@ -162,7 +165,7 @@ class PokerGame(game.Game):
             p.cards.deal(2, [self.deck.all_cards], "bottom")
         self.community_cards.deal(5, [self.deck.all_cards], "bottom")
         self.best_cards = None
-        # self.deck.shuffle()
+        self.round_winner = None
 
     def player_turns(self):
         """Iterates through list of player names, and checks each player's status to see if player has previously
@@ -198,7 +201,7 @@ class PokerGame(game.Game):
         while True:
             to_call = self.pot_min_to_call - p.player_pot
             choice = input("\n\nYou have put £{} into the pot so far, and have £{} remaining.\n"
-                           "The amount needed in the pot from each player in order to call the minimum bet is £{}; "
+                           "The minimum bet is at £{}: "
                            "£{} is needed from you to check/call. \nThere is a total of £{} in the pot."
                            "\n\nWould you like to check/call (c), raise (r), or fold (f)?\n"
                            "Input: ".format(p.player_pot, p.money, self.pot_min_to_call,
@@ -264,8 +267,10 @@ class PokerGame(game.Game):
 
             if self.round_winner is None:
                 self.round_winner = n
+                self.best_cards = p.best_cards
             # if rank of player's hand is better (lower) than rank of the current winner's hand, replace
             # self.round_winner and self.best_cards with player's name and best cards
+
             if self.hand_ranks[p.best_cards[0]] < self.hand_ranks[self.best_cards[0]]:
                 self.round_winner = n
                 self.best_cards = p.best_cards
@@ -294,15 +299,9 @@ class PokerGame(game.Game):
                         self.round_winner = n
                         self.best_cards = p.best_cards
                         self.split_with = None
-                    else :
+                    else:
                         self.split_with = n
-
-
-
-
-
-
-
+            print("\n{} is currently winning the round with a {}".format(self.round_winner, self.best_cards[0]))
 
 
     def assess(self, p: player.Player):
@@ -363,19 +362,18 @@ class PokerGame(game.Game):
         # straight values.
         # Use remainders from 0 to 15 / 13 to get values of straights which loop from J,Q,K back to A,2 for example
         for n in range(0, 13):
-            straight_values = [unique_total_dict[((i+n) % 13) + 2] for i in range(0, 5)]
+            straight_values = [unique_total_dict[((i + n) % 13) + 2] for i in range(0, 5)]
             straight_totals.append(sum(straight_values))
         unique_player_comm_values = [unique_total_dict[i[0]] for i in community_and_player_cards]
         totals = [i for i in list(itertools.combinations(unique_player_comm_values, r=5)) if sum(i) in straight_totals]
-        print(totals)
-        #straight_cards = [k for k, v in unique_total_dict if v in totals]
-        #print(straight_cards)
+        # straight_cards = [k for k, v in unique_total_dict if v in totals]
+        # print(straight_cards)
         if totals:
-            p.best_cards = ["Straight", totals]
+            p.best_cards = ["Straight", totals]  # TODO cards not card values for a straight p.best_cards.
 
-        #TODO full house
-        #TODO flush
-        #TODO Straight flush
+        # TODO full house
+        # TODO flush
+        # TODO Straight flush
 
         print(p.best_cards)
 
