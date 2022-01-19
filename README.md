@@ -9,4 +9,4 @@ Fun project to practice programming in python. Specifically:
 Poker
 =====
 Disclaimer: Offical poker rules are not implemented, as I don't know how to play properly! The (probably incorrect) rules that I use 
-with mates will be fully implemented however. (eg. no minimum raise.)
+with mates will be fully incorporated however. (eg. no minimum raise.)
