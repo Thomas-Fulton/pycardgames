@@ -57,7 +57,7 @@ class PokerGame(game.Game):
         print("Let's play Poker! You are playing with {} players: {}".format(self.nplayers, players))
 
         # Set attributes:
-        self.buy_in = self.check_value(message="How much is the buy-in?\nInput: ")
+        self.buy_in = check_value(message="How much is the buy-in?\nInput: ")
         for p in self.player_names:
             initiated_player = player.Player(p)
             super(player.Player, initiated_player).__init__()
@@ -208,7 +208,7 @@ class PokerGame(game.Game):
                     print("\nYou do not have enough money to raise; please fold (f) or check/call (c).\n")
                     continue
                 print("Minimum bet (to call): {}".format(self.pot_min_to_call))
-                raise_by = self.check_value("By how much would you like to raise beyond the minimum bet?\nInput: ",
+                raise_by = check_value("By how much would you like to raise beyond the minimum bet?\nInput: ",
                                             val_min=0, val_max=(p.money - to_call))
                 p.money -= (raise_by + to_call)
                 p.player_pot += (raise_by + to_call)
@@ -245,36 +245,6 @@ class PokerGame(game.Game):
                 continue
 
         return self
-
-    def check_value(self, message, val_min=0, val_max=None):
-        """
-        Prompts the user for input until the input value is within a specified range.
-
-        :param message: Message which is printed to describe the requested value from the user.
-        :type message: str
-        :param val_min: minimum value
-        :type val_min: int
-        :param val_max: maximum value
-        :type val_max: int
-        :return: returns integer within range of val_min and val_max
-        :rtype: int
-        """
-        while True:
-            try:
-                value = int(input(message).strip())
-            except ValueError:
-                print("Please enter an integer.\n")
-                continue
-
-            if value < val_min:
-                print("Sorry, your input is below the minimum ({}). Please try again:\n".format(val_min))
-                continue
-            if val_max is not None and value > val_max:
-                print("Sorry, your input is above the maximum ({}) Please try again:\n".format(val_max))
-                continue
-            else:
-                break
-        return value
 
     def reveal(self):
         """
