@@ -8,6 +8,6 @@ setup(
     author='thomas',
     author_email='thomas@fultondesigns.co.uk',
     description='',
-    long_description = open('README.txt').read(),
+    long_description = open('README.md').read(),
     url='https://github.com/Thomas-Fulton/python-card-games.git',
 )
