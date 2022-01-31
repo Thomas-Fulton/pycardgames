@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from games import poker_game
-from games import snap_game
+from cardgames.games import poker_game
+from cardgames.games import snap_game
 import argparse
 
 

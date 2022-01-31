@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import itertools
-from components import game, deck, player
+from cardgames.components import game, deck, player
 
 
 def check_value(message, val_min=0, val_max=None):
