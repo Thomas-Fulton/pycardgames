@@ -1,0 +1,23 @@
+﻿cardgames
+=========
+
+.. automodule:: cardgames
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
