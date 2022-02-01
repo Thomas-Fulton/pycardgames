@@ -20,15 +20,6 @@ This project is under active development
    usage
    api
 
-# .. autosummary::
-#    :toctree: _autosummary
-#    :template: custom-module-template.rst
-#    :recursive:
-# 
-#    cardgames
-# 
-
-
 
 
 Indices and tables
