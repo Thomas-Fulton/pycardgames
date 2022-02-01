@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from components import game, deck, player
+from cardgames.components import game, deck, player
 
 
 class SnapGame(game.Game):
