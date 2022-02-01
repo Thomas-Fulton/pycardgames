@@ -16,10 +16,10 @@ def parse_args():
                                                                                   'instructions')
     parser.add_argument('-l', '--loadout', type=str, default='new game', help='Resume a saved game (Not currently '
                                                                               'available)')
-    parser.add_argument('-p', '--player', type=str, dest='players', action='append', help='Add a player. (At least '
-                                                                                          'two players with unique '
-                                                                                          'names are required for a '
-                                                                                          'game.)')  # action
+    parser.add_argument('-p', '--player', type=str, dest='players', action='append', help='Add a single player. (At '
+                                                                                          'least two players with '
+                                                                                          'unique names are required '
+                                                                                          'for a game.)')
     # ='append' adds each occurrence of player to list of players
     parser.add_argument('-i', '--instructions', action='store_true', help='Print instructions for a specified '
                                                                           '<game>.')
