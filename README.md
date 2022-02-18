@@ -5,6 +5,9 @@ Fun project to practice programming in python. Specifically:
 - refresh Python basics
 - implement argparse and command line functionality
 - automated in-code documentation in PyCharm, and automated package documentation with sphinx
+> _This project is under active development:_ Automated documentation and upload to Read-the-docs is functioning, but the content is incomplete.
+
+__Please see the [Full Documentation](https://python-card-games.readthedocs.io/en/latest/) for the Instructions, Example Usage and API.__
 
 # Installation
 If git is not installed: `pip install --upgrade https://github.com/Thomas-Fulton/python-card-games/tarball/master`  
@@ -14,11 +17,10 @@ Alternatively clone the repository, and install from the within the repository's
 
 TODO
 - add docstrings and attributes to all 
-- create read-the-docs/git pages
 - usage 
 
 
 Poker
 =====
-Disclaimer: Offical poker rules are not implemented, as I don't know how to play properly! The (probably incorrect) rules that I use 
-with mates will be fully incorporated however. (eg. no minimum raise.)
+> Disclaimer: Offical poker rules are not implemented, as I don't know how to play properly! The (probably incorrect) rules that I use 
+with mates are fully incorporated however (eg. no minimum raise; raise by a specified amount instead.)
