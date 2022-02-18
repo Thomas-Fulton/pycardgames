@@ -11,6 +11,8 @@ class Deck:
         self.card_values = range(2, 15) # ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
         self.card_suits = ["Diamonds", "Hearts", "Clubs", "Spades"]
         self.all_cards = [(value, suit) for value in self.card_values for suit in self.card_suits]
+        '''List of tuples: each tuple represents one card (value, suit) currently in the deck.
+        :rtype: list(tuple) '''
 
     def shuffle(self):
         """
