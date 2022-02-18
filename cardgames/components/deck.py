@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+"""Contains class :Class Deck:: to simulate a deck of cards."""
+
 import random
 
 
 class Deck:
-    """
-    Simulates a deck of cards using lists.
+    """Attributes simulate a deck of cards, and methods simulate some common actions like shuffling and dealing.
     """
     def __init__(self):
         self.card_values = range(2, 15) # ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
@@ -42,7 +43,8 @@ class Deck:
 
 
     def upturn(self, ncards):
-        """
+        """Turns over ncards number of cards to reveal the value and suit.
+
         :param ncards: The number of cards to turn over and display.
         :type ncards: int
         """
