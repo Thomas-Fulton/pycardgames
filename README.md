@@ -12,6 +12,12 @@ Otherwise use: `pip install git+https://github.com/Thomas-Fulton/python-card-gam
 Alternatively clone the repository, and install from the within the repository's directory: `pip install .`  
 
 
+TODO
+- add docstrings and attributes to all 
+- create read-the-docs/git pages
+- usage 
+
+
 Poker
 =====
 Disclaimer: Offical poker rules are not implemented, as I don't know how to play properly! The (probably incorrect) rules that I use 
