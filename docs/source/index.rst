@@ -8,10 +8,10 @@ Welcome to PyCardgames's documentation!
 
 **PyCardgames** is a python package that simulates games that use a traditional set of cards on the command line. It is a fun project created to improve the developer's knowledge of argparse, python package structure and implementation, and automated documentation. 
 
-Check out the :doc:`usage` section for further information.
+For installation instructions, see :ref:`installation <installation>` or check out the :doc:`usage` section to get started. 
 
-..note::
-This project is under active development
+.. note::
+   This project is under active development
 
 
 .. toctree::
