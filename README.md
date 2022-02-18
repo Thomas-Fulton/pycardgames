@@ -7,7 +7,7 @@ Fun project to practice programming in python. Specifically:
 - automated in-code documentation in PyCharm, and automated package documentation with sphinx
 > _This project is under active development:_ Automated documentation and upload to Read-the-docs is functioning, but the content is incomplete.
 
-__Please see the [Full Documentation](https://python-card-games.readthedocs.io/en/latest/) for the Instructions, Example Usage and API.__
+Please see the [Full Documentation](https://python-card-games.readthedocs.io/en/latest/) for the Instructions, Example Usage and API.
 
 # Installation
 If git is not installed: `pip install --upgrade https://github.com/Thomas-Fulton/python-card-games/tarball/master`  
