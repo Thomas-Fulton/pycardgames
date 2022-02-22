@@ -1,4 +1,4 @@
 #!/usr/bin/env python
-"""Component modules super-classes
+"""Component modules which make up all games
 
 """
