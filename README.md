@@ -23,4 +23,4 @@ TODO
 Poker
 =====
 > Disclaimer: Offical poker rules are not implemented, as I don't know how to play properly! The (probably incorrect) rules that I use 
-with mates are fully incorporated however (eg. no minimum raise; raise by a specified amount instead.)
+are fully incorporated however (eg. no minimum raise; raise by any specified amount instead.)
