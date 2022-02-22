@@ -218,7 +218,7 @@ class PokerGame(game.Game):
                            "Input: ".format(p.player_pot, p.money, self.pot_min_to_call,
                                             to_call, self.pot_total)).lower()
             if choice == "r":
-                if p.money <= self.pot_min_to_call:
+                if p.money < self.pot_min_to_call:
                     print("\nYou do not have enough money to raise; please fold (f) or check/call (c).\n")
                     continue
                 print("Minimum bet (to call): {}".format(self.pot_min_to_call))
@@ -231,7 +231,7 @@ class PokerGame(game.Game):
                 p.status = "raised"
                 break
             elif choice == "c":
-                if p.money <= to_call:
+                if p.money < to_call:
                     nchoice = input("You do not have enough remaining to match the call; do you want to go all in (a)"
                                     ", or fold (f)? ").lower()
                     if nchoice == "a":
@@ -241,14 +241,16 @@ class PokerGame(game.Game):
                         p.status = "all in"
                         break
                     elif nchoice == "f":
-                        pass
+                        choice = "f"
+                        break
                     else:
                         print("Invalid selection, please try again.")
                         continue
-                p.money -= to_call
-                p.player_pot += to_call
-                self.pot_total += to_call
-                p.status = "called"
+                elif p.money <= to_call:
+                    p.money -= to_call
+                    p.player_pot += to_call
+                    self.pot_total += to_call
+                    p.status = "called"
                 break
             elif choice == "f":
                 p.status = "folded"
