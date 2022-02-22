@@ -83,9 +83,9 @@ class PokerGame(game.Game):
         self.split_with = None
 
         # New game until someone wins, or game is exited.
-        while self.cont is True:
+        while True:
             self.next_game()
-            while True:
+            while self.cont is True:
                 cont = input("\n\nWould you like to continue to the next game (y)? (Input \"Q\" to quit.)\nInput: "
                              "").lower()
                 if cont == "y":
@@ -98,6 +98,8 @@ class PokerGame(game.Game):
                 else:
                     print("\nInvalid response, please try again:")
                     continue
+            if self.cont is False:
+                break
 
         print("\n\nThank you for playing poker!")
 
@@ -151,10 +153,19 @@ class PokerGame(game.Game):
         self.reveal()
         print("\n\n{} won the round, and the pot (£{}) with a {}".format(self.round_winner, self.pot_total,
                                                                          self.best_cards[0]))
-        # TODO check blind players have not lost all money/have enough to put in the blind for the next round.
 
         self.players[self.round_winner].money += self.pot_total
         self.pot_total = 0
+
+        # TODO check blind players have not lost all money/have enough to put in the blind for the next round.
+        for n in self.player_names:
+            p = self.players[n]
+            if p.money < self.big_blind:
+                print("\n{} does not have enough money to continue and is out of the game.".format(n))
+                self.player_names.remove(n)
+                if len(self.player_names) is 1:
+                    print("\n\nCongratulations, {} is the only player remaining and has won the game!!!".format(self.player_names[0].upper()))
+                    self.cont = False
 
         # Reset: Deal back player and community cards to deck
         self.pot_min_to_call = 0
@@ -268,9 +279,9 @@ class PokerGame(game.Game):
             if self.round_winner is None:
                 self.round_winner = n
                 self.best_cards = p.best_cards
+
             # if rank of player's hand is better (lower) than rank of the current winner's hand, replace
             # self.round_winner and self.best_cards with player's name and best cards
-
             if self.hand_ranks[p.best_cards[0]] < self.hand_ranks[self.best_cards[0]]:
                 self.round_winner = n
                 self.best_cards = p.best_cards
