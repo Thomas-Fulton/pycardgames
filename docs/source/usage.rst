@@ -43,7 +43,8 @@ At least two players are required for a game of poker, so the ``--player`` flag 
 Command line arguments
 ----------------------
 
+.. argparse::
+   :ref: cardgames.__main__.create_parser
+   :prog: pycardgames
 
-.. autoprogram:: cardgames.__main__:parse_args
-   :prog: cardgames.__main__.py
 

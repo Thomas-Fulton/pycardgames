@@ -1,4 +1,4 @@
-cardgames.components.deck.Deck
+﻿cardgames.components.deck.Deck
 ==============================
 
 .. currentmodule:: cardgames.components.deck
@@ -26,5 +26,11 @@ cardgames.components.deck.Deck
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Deck.all_cards
    
    

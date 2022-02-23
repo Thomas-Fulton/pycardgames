@@ -36,11 +36,10 @@ extensions = [
    'sphinx.ext.doctest',
    'sphinx.ext.autodoc',
    'sphinx.ext.autosummary',
-   'sphinxcontrib.autoprogram',
+   #'sphinxcontrib.autoprogram',
    'sphinxarg.ext',
-   ]
+]
 
-#extensions += ['sphinxarg.ext']
 
 # Turn on autosummary
 autosummary_generate = True
