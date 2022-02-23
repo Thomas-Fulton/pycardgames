@@ -32,7 +32,11 @@ Example: Poker
 --------------
 
 To play any game, the most important arguments are the ``--game <game>`` and ``--player <player name>`` flags. For example, to start a game of poker, run:
-``pycardgames --game poker --player Tom --player Fred``
+
+.. code-block:: bash
+
+   pycardgames --game poker --player Tom --player Fred
+
 At least two players are required for a game of poker, so the ``--player`` flag is used twice, adding a new player each time.
 
 
