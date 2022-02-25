@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Contains class :Class Deck:: to simulate a deck of cards."""
+"""Contains class :py:Class Deck:: to simulate a deck of cards."""
 
 import random
 
@@ -67,7 +67,7 @@ class Deck:
 
     def empty(self):
         """
-        Clears all cards from :py:attr:`deck.all_cards` to create an empty deck.
+        Clears all cards from :py:attr:`Deck.all_cards` to create an empty deck.
         """
         self.all_cards.clear()
 
