@@ -1,7 +1,11 @@
 version: 2
 
-conda:
-  environment: conda_env.yml
+#conda:
+#  environment: conda_env.yml
+
+python:
+   install:
+   - requirements: requirements.txt
 
 build:
   os: ubuntu-20.04
