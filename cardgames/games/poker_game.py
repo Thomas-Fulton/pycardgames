@@ -42,16 +42,19 @@ class PokerGame(game.Game):
         """Initialises attributes, and sets up a loop that starts a new game until there is a winner, or the game is
         exited.
 
-        :param loadout:
-        :type loadout:
+        :param loadout: name of saved game to load (not yet functioning)
+        :type loadout: str
         :param players:
-        :type players:
-        :param instructions:
-        :type instructions:
+        :type players: list(str)
+        :param instructions: show instructions
+        :type instructions: bool
         """
         super().__init__()
         self.loadout = loadout
         self.player_names = players
+        '''List of player names
+        :type: list
+        '''
         self.players = {}
         self.instructions = instructions
         if instructions is True:
@@ -409,7 +412,7 @@ class PokerGame(game.Game):
         return self
 
 
-if __name__ == '__main__':
-    game = PokerGame(loadout="new_game", players=["Tom", "Bot"], instructions=None)
+#if __name__ == '__main__':
+#    game = PokerGame(loadout="new_game", players=["Tom", "Bot"], instructions=False)
 
 # TODO bot automation

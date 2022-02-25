@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Contains class :py:Class Deck:: to simulate a traditional deck of 52 cards."""
+"""Contains class :py:Class:Deck:: to simulate a traditional deck of 52 cards."""
 
 import random
 
