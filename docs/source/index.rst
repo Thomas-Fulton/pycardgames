@@ -17,6 +17,7 @@ For installation instructions, see :ref:`installation <installation>` or check o
 .. toctree::
    :maxdepth: 2
 
+   installation
    usage
    api
 
