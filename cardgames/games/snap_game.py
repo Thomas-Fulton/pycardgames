@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+"""Simulates a game of snap. NOTE: Under development and NOT currently functioning
+"""
 from cardgames.components import game, deck, player
 
 

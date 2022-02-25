@@ -39,6 +39,16 @@ class PokerGame(game.Game):
     """
 
     def __init__(self, loadout, players, instructions):
+        """Initialises attributes, and sets up a loop that starts a new game until there is a winner, or the game is
+        exited.
+
+        :param loadout:
+        :type loadout:
+        :param players:
+        :type players:
+        :param instructions:
+        :type instructions:
+        """
         super().__init__()
         self.loadout = loadout
         self.player_names = players
@@ -47,9 +57,9 @@ class PokerGame(game.Game):
         if instructions is True:
             print("(Instructions would now be printed)")
         # user playing game (not just reading instructions), so player is required
-        assert (self.player_names is not None), "\n\nNo players have been specified: at least two players are required " \
-                                                "to play. You can add a new player " \
-                                                "using --player or -p flag.\n\n "
+        assert (self.player_names is not None), "\n\nNo players have been specified: at least two players are " \
+                                                "required to play. You can add a new player using --player or -p " \
+                                                "flag.\n\n "
         self.nplayers = len(self.player_names)
         assert (self.nplayers > 1), "\n\nOnly one player has been specified: at least two players are required " \
                                     "to play. You can add a new player " \
@@ -263,7 +273,11 @@ class PokerGame(game.Game):
         return self
 
     def reveal(self):
-        """
+        """Assesses the players cards to reveal the winner.
+
+        For each player: checks their status (eg. folded, all in). If they are in the round, calls :py:meth:`~assess`
+        to find their best cards. Compares the rank (given in :py:attr:`~hand_ranks`) of their best hand to the
+        current best hand.
 
         """
         for n in self.player_names:
@@ -316,11 +330,14 @@ class PokerGame(game.Game):
                     else:
                         self.split_with = n
             print("\n{} is currently winning the round with a {}".format(self.round_winner, self.best_cards[0]))
+            return self
 
     def assess(self, p: player.Player):
-        """Lists all pairwise combinations of the 5 community and 2 player cards, and uses the combinations to find
+        """Assess the cards of a player to find the best hand given the community cards.
+
+        Lists all pairwise combinations of the 5 community and 2 player cards, and uses the combinations to find
         all pairs, triples, and four-of-a-kinds, and sets the players best_cards attribute to the best hand the
-        player has. TODO (Straights, flushes and full houses not calculated yet.)
+        player has. TODO (Flushes and full houses not calculated yet.)
 
         :param p: player
         :type p: player.Player
@@ -389,6 +406,7 @@ class PokerGame(game.Game):
         # TODO Straight flush
 
         print(p.best_cards)
+        return self
 
 
 if __name__ == '__main__':

@@ -1,14 +1,18 @@
 #!/usr/bin/env python
-"""Contains class :py:Class Deck:: to simulate a deck of cards."""
+"""Contains class :py:Class Deck:: to simulate a traditional deck of 52 cards."""
 
 import random
 
 
 class Deck:
-    """Attributes simulate a deck of cards, and methods simulate some common actions like shuffling and dealing.
+    """Simulate a deck of cards through :py:attr:`Deck.all_cards`. Methods simulate some common actions like shuffling
+    and dealing cards.
+
     """
+
     def __init__(self):
-        self.card_values = range(2, 15) # ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
+        self.card_values = range(2,
+                                 15)  # ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
         self.card_suits = ["Diamonds", "Hearts", "Clubs", "Spades"]
         self.all_cards = [(value, suit) for value in self.card_values for suit in self.card_suits]
         '''List of tuples: each tuple represents one card (value, suit) currently in the deck.
@@ -17,8 +21,7 @@ class Deck:
         '''
 
     def shuffle(self):
-        """
-        Randomly reorders :py:attr:`Deck.all_cards` attribute.
+        """Randomly reorders :py:attr:`Deck.all_cards` attribute.
         """
         random.shuffle(self.all_cards)  # random shuffle
 
@@ -44,8 +47,6 @@ class Deck:
                     print(e)
                     pass
 
-
-
     def upturn(self, ncards):
         """Turns over ncards number of cards to reveal the value and suit.
 
@@ -66,14 +67,12 @@ class Deck:
             print("    {} of {}".format(card_value_name, self.all_cards[k][1]))
 
     def empty(self):
-        """
-        Clears all cards from :py:attr:`Deck.all_cards` to create an empty deck.
+        """Clears all cards from :py:attr:`Deck.all_cards` to create an empty deck, for example when the deck is
+        that of a :py:Class:`cardgames.components.player.Player` who hasn't yet been delt cards.
         """
         self.all_cards.clear()
 
     def order(self):
-        """Reorders the deck (ascending). Suit order is random.
+        """Reorders the deck (ascending). Suit order is random. (Mostly for testing purposes)
         """
         self.all_cards.sort(key=lambda card_val: card_val[0])
-
-
