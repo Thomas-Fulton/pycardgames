@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import itertools
+import itertools, time
 from cardgames.components import game, deck, player
 
 
@@ -124,9 +124,12 @@ class PokerGame(game.Game):
         # Setup new game: Deal player and community cards.
         self.deck.shuffle()
         print("\nNew Game of five rounds. \nDealing player cards...")
+        time.sleep(1)
+
         player_cards = [self.players[p].cards.all_cards for p in self.players]
         self.deck.deal(2, player_cards, "top")
         print("\nDealing the first three community cards...")
+        time.sleep(1)
 
         # rotate player order and blinds.
         self.player_names.insert(0, self.player_names.pop(self.nplayers - 1))
@@ -138,28 +141,37 @@ class PokerGame(game.Game):
         self.players[self.player_names[1]].player_pot += self.small_blind
         self.pot_min_to_call = self.big_blind
         self.pot_total = self.small_blind + self.big_blind
+        time.sleep(1)
 
         # First round of bets: Preflop
         print("\nFirst round: PREFLOP")
+        time.sleep(1)
         self.player_turns()
 
         # Second round of bets: Flop
         print("\n\nNext round: FLOP\nDealing the first three community cards:\n")
+        time.sleep(1)
         self.deck.deal(3, [self.community_cards.all_cards], "top")
         self.community_cards.upturn(3)
+        time.sleep(1)
         self.player_turns()
 
         # Third round of bets: Turn
         print("\n\nNext round: TURN\nDealing the fourth community card:\n")
+        time.sleep(1)
         self.deck.deal(1, [self.community_cards.all_cards], "top")
         self.community_cards.upturn(1)
+        time.sleep(1)
         self.player_turns()
+        time.sleep(1)
 
         # Fourth round of bets: River
         print("\n\nNext round: RIVER\nDealing the final community card:\n")
         self.deck.deal(1, [self.community_cards.all_cards], "top")
         self.community_cards.upturn(1)
+        time.sleep(1)
         self.player_turns()
+        time.sleep(1)
 
         # Fifth round of bets: Showdown
         print("\n\nNext round: SHOWDOWN\nPlease reveal your cards.")
