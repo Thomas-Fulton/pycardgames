@@ -1,7 +1,6 @@
 astroid==2.9.3
 certifi==2021.10.8
 lazy-object-proxy==1.7.1
--e git+ssh://git@github.com/Thomas-Fulton/python-card-games.git@3b103cfce68533613b84b5aa95b3735e473d5022#egg=pycardgames
 PyYAML==6.0
 sphinx-argparse==0.3.1
 sphinx-autoapi==1.8.4
