@@ -124,16 +124,16 @@ class PokerGame(game.Game):
         # Setup new game: Deal player and community cards.
         self.deck.shuffle()
         print("\nNew Game of five rounds. \nDealing player cards...")
-        time.sleep(1)
+        time.sleep(1.5)
 
         player_cards = [self.players[p].cards.all_cards for p in self.players]
         self.deck.deal(2, player_cards, "top")
         print("\nDealing the first three community cards...")
-        time.sleep(1)
+        time.sleep(1.5)
 
         # rotate player order and blinds.
         self.player_names.insert(0, self.player_names.pop(self.nplayers - 1))
-        print("\n{} is the big blind (£{}) for this round, and {} is the small blind (£{}). Adding blinds to the pot"
+        print("\n{} is the big blind (£{}) for this round, and {} is the small blind (£{}). Adding blinds to the pot..."
               "...".format(self.player_names[0], self.big_blind, self.player_names[1], self.small_blind))
         self.players[self.player_names[0]].money -= self.big_blind
         self.players[self.player_names[0]].player_pot += self.big_blind
@@ -141,37 +141,37 @@ class PokerGame(game.Game):
         self.players[self.player_names[1]].player_pot += self.small_blind
         self.pot_min_to_call = self.big_blind
         self.pot_total = self.small_blind + self.big_blind
-        time.sleep(1)
+        time.sleep(1.5)
 
         # First round of bets: Preflop
         print("\nFirst round: PREFLOP")
-        time.sleep(1)
+        time.sleep(1.5)
         self.player_turns()
 
         # Second round of bets: Flop
         print("\n\nNext round: FLOP\nDealing the first three community cards:\n")
-        time.sleep(1)
+        time.sleep(1.5)
         self.deck.deal(3, [self.community_cards.all_cards], "top")
         self.community_cards.upturn(3)
-        time.sleep(1)
+        time.sleep(1.5)
         self.player_turns()
 
         # Third round of bets: Turn
         print("\n\nNext round: TURN\nDealing the fourth community card:\n")
-        time.sleep(1)
+        time.sleep(1.5)
         self.deck.deal(1, [self.community_cards.all_cards], "top")
         self.community_cards.upturn(1)
-        time.sleep(1)
+        time.sleep(1.5)
         self.player_turns()
-        time.sleep(1)
+        time.sleep(1.5)
 
         # Fourth round of bets: River
         print("\n\nNext round: RIVER\nDealing the final community card:\n")
         self.deck.deal(1, [self.community_cards.all_cards], "top")
         self.community_cards.upturn(1)
-        time.sleep(1)
+        time.sleep(1.5)
         self.player_turns()
-        time.sleep(1)
+        time.sleep(1.5)
 
         # Fifth round of bets: Showdown
         print("\n\nNext round: SHOWDOWN\nPlease reveal your cards.")
@@ -182,13 +182,12 @@ class PokerGame(game.Game):
         self.players[self.round_winner].money += self.pot_total
         self.pot_total = 0
 
-        # TODO check blind players have not lost all money/have enough to put in the blind for the next round.
         for n in self.player_names:
             p = self.players[n]
             if p.money < self.big_blind:
                 print("\n{} does not have enough money to continue and is out of the game.".format(n))
                 self.player_names.remove(n)
-                if len(self.player_names) is 1:
+                if len(self.player_names) == 1:
                     print("\n\nCongratulations, {} is the only player remaining and has won the game!!!".format(self.player_names[0].upper()))
                     self.cont = False
 
@@ -209,6 +208,7 @@ class PokerGame(game.Game):
         """
         for n in self.player_names:
             p: player.Player = self.players[n]
+            time.sleep(1.5)
             if p.status == "folded":
                 print("\n\n{} has folded.\n".format(n))
                 continue
@@ -216,7 +216,9 @@ class PokerGame(game.Game):
                 print("\n\n{} has gone all in.\n".format(n))
                 continue
             print("\n\n\n\nNext player:", n)
+            time.sleep(1.5)
             self.player_choice(p)
+            time.sleep(1.5)
         return self
 
     def player_choice(self, p):
@@ -284,7 +286,6 @@ class PokerGame(game.Game):
             else:
                 print("(Invalid selection, please try again.)")
                 continue
-
         return self
 
     def reveal(self):
