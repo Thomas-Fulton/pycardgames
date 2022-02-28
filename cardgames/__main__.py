@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import time
 from cardgames.games import poker_game
 from cardgames.games import snap_game
 
@@ -24,14 +25,14 @@ def create_parser():
     # ='append' adds each occurrence of player to list of players
     parser.add_argument('-i', '--instructions', action='store_true', help='Print instructions for a specified '
                                                                           '<game>.')
-    #args = parser.parse_args()
-    #if args.instructions is True and args.game is None:
+    #if parser.instructions is True and parser.game is None:
     #    parser.error('<game> required with --instructions: please specify for which game you would like\
     #    to display instructions.')
 
-    
-    # for arg in vars(args):
-    #    print("{} is {}".format(arg, getattr(args, arg)))
+    args = parser.parse_args()
+    if args.instructions is True and args.game is None:
+        parser.error('<game> required with --instructions: please specify for which game you would like to display '
+                     'instructions.')
     return parser
 
 
@@ -39,20 +40,19 @@ def main():
     """Launches game module using parsed command line arguments.
     """
     args = create_parser().parse_args()
-    if args.instructions is True and args.game is None:
-        args.error('<game> required with --instructions: please specify for which game you would like\
-        to display instructions.')
-
 
     print("\n\n\n        Welcome to Python cardgames!\n\n\n")
+    time.sleep(1.5)
 
     try:
         if args.game == "snap":
             print("Launching \'{}\'...\n\n\n".format(args.game))
+            time.sleep(1.5)
             this_game = snap_game.SnapGame(args.loadout, args.players, args.instructions)
 
         elif args.game == "poker":
             print("Launching \'{}\'...\n\n\n".format(args.game))
+            time.sleep(1.5)
             this_game = poker_game.PokerGame(args.loadout, args.players, args.instructions)
 
         else:
