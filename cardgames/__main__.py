@@ -4,11 +4,8 @@ import time
 from cardgames.games import poker_game
 from cardgames.games import snap_game
 
-
-
 def create_parser():
-    """
-    Parses command line arguments for :py:func:`main()`
+    """Parses command line arguments for :py:func:`main()`
     :return: args
     :rtype: :py:class:`argparse.Namespace`
     """
@@ -25,10 +22,6 @@ def create_parser():
     # ='append' adds each occurrence of player to list of players
     parser.add_argument('-i', '--instructions', action='store_true', help='Print instructions for a specified '
                                                                           '<game>.')
-    #if parser.instructions is True and parser.game is None:
-    #    parser.error('<game> required with --instructions: please specify for which game you would like\
-    #    to display instructions.')
-
     args = parser.parse_args()
     if args.instructions is True and args.game is None:
         parser.error('<game> required with --instructions: please specify for which game you would like to display '
