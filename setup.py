@@ -10,7 +10,7 @@ setup(
     description='',
     long_description=open('README.md').read(),
     project_urls={'Source': 'https://github.com/Thomas-Fulton/python-card-games', 'Documentation': 'tbd'},
-    python_requires='>=3',
+    python_requires='>=3.6',
     entry_points={'console_scripts': [
         'pycardgames = cardgames.__main__:main'], }
 )
