@@ -1,4 +1,4 @@
-# Pycardgames
+# pycardgames
 Fun project to practice programming in python. Specifically:
 
 - learn and implement python package structure
