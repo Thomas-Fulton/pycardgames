@@ -6,7 +6,7 @@ Getting started
 
 Pycardgames simulates traditional card games using a 52 card deck from the command line. Make sure the package has been downloaded and installed (see :ref:`Installation<installation>`).  
 
-The program is started by typing ``pycardgames``, followed by optional arguments, into your terminal. For the full command line arguments, see :ref:`below<command_line>`, or ``pycardgames --help``.
+The program is started by typing ``pycardgames``, followed by optional arguments, into the command line. For the full list of command line arguments, see :ref:`below<command_line>`, or type ``pycardgames --help``.
 
 
 Example: Poker 
