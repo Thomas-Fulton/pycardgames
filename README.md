@@ -10,8 +10,8 @@ Fun project to practice programming in python. Specifically:
 Please see the [Full Documentation](https://python-card-games.readthedocs.io/en/latest/) for the Instructions, Example Usage and API.
 
 # Installation
-If git is not installed: `pip install --upgrade https://github.com/Thomas-Fulton/python-card-games/tarball/master`  
-Otherwise use: `pip install git+https://github.com/Thomas-Fulton/python-card-games.git`  
+If git is not installed: `pip install --upgrade https://github.com/Thomas-Fulton/pycardgames/tarball/master`  
+Otherwise use: `pip install git+https://github.com/Thomas-Fulton/pycardgames.git`  
 Alternatively clone the repository, and install from the within the repository's directory: `pip install .`  
 
 
