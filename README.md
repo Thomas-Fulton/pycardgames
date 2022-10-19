@@ -16,7 +16,7 @@ Alternatively clone the repository, and install from the within the repository's
 
 
 TODO
-- add docstrings and attributes to all 
+- add docstrings and attributes to remaining classes
 - usage 
 
 
