@@ -95,26 +95,25 @@ class PokerGame(game.Game):
                            "Straight": 6, "Triple": 7, "Two Pair": 8, "Pair": 9, "High Card": 10}
         self.split_with = None
 
-        # New game until someone wins, or game is exited.
-        while True:
-            self.next_game()
-            while self.cont is True:
-                cont = input("\n\nWould you like to continue to the next game (y)? (Input \"Q\" to quit.)\nInput: "
-                             "").lower()
-                if cont == "y":
-                    break
-                elif cont == "q":
-                    self.cont = False
-                    # save game?
-                    # Print final winnings
-                    break
-                else:
-                    print("\nInvalid response, please try again:")
-                    continue
-            if self.cont is False:
-                break
+        # New game (self.next_game())until someone wins, or game is exited.
 
-        print("\n\nThank you for playing poker!")
+        while self.cont is True:
+            self.next_game()
+            cont = input("\n\nWould you like to continue to the next game (y)? (Input \"Q\" to quit.)\nInput: "
+                         "").lower()
+            if cont == "y":
+                break
+            elif cont == "q":
+                self.cont = False
+                # save game?
+                # Print final winnings
+                break
+            else:
+                print("\nInvalid response, please try again:")
+                continue
+
+        time.sleep(1.5)
+        print("\n\nThank you for playing poker!\n\n")
 
     def next_game(self):
         """Simulates one game of poker, consisting of five rounds (Preflop, Flop, Turn, River and Showdown).
@@ -230,10 +229,13 @@ class PokerGame(game.Game):
         :return: player
         :rtype: :py:class:`player.Player`
         """
-        print("\nHere are the community cards so far:")
-        self.community_cards.upturn(len(self.community_cards.all_cards))
+        if self.community_cards:
+            print("\nHere are the community cards so far:")
+            self.community_cards.upturn(len(self.community_cards.all_cards))
+            time.sleep(1.5)
         print("\n{}, here are your cards:".format(p.name))
         p.cards.upturn(2)
+        time.sleep(1.5)
 
         # loop to make sure user input is valid, and that the player has enough money for the choice:
         while True:
